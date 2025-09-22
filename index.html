@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lost and Found Report</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 20px;
+      background: #f4f4f9;
+    }
+    h1 {
+      text-align: center;
+    }
+    form {
+      background: white;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+      max-width: 500px;
+      margin: auto;
+    }
+    label {
+      display: block;
+      margin-top: 10px;
+      font-weight: bold;
+    }
+    input, textarea {
+      width: 100%;
+      padding: 8px;
+      margin-top: 5px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+    }
+    button {
+      margin-top: 15px;
+      padding: 10px;
+      background: #007BFF;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    button:hover {
+      background: #0056b3;
+    }
+    .report-list {
+      margin-top: 30px;
+      max-width: 600px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    .report-item {
+      background: white;
+      padding: 15px;
+      border-radius: 8px;
+      margin-bottom: 10px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    }
+    .report-item img {
+      max-width: 200px;
+      margin-top: 10px;
+      border-radius: 5px;
+    }
+  </style>
+</head>
+<body>
+  <h1>Lost and Found Report</h1>
+  <form id="reportForm" enctype="multipart/form-data">
+    <label for="founder">Name of the Founder:</label>
+    <input type="text" id="founder" name="founder" required>
+
+    <label for="place">Place where item was seen:</label>
+    <input type="text" id="place" name="place" required>
+
+    <label for="time">Date and Time Lost:</label>
+    <input type="datetime-local" id="time" name="time" required>
+
+    <label for="description">Description:</label>
+    <textarea id="description" name="description" rows="3" required></textarea>
+
+    <label for="image">Upload Image (optional):</label>
+    <input type="file" id="image" name="image" accept="image/*">
+
+    <button type="submit">Submit Report</button>
+  </form>
+
+  <div class="report-list" id="reportList">
+    <h2>Submitted Reports</h2>
+  </div>
+
+  <script>
+    const form = document.getElementById('reportForm');
+    const reportList = document.getElementById('reportList');
+
+    form.addEventListener('submit', async function(e) {
+      e.preventDefault();
+
+      const formData = new FormData(form);
+
+      try {
+        const response = await fetch('https://lost-and-found2-0dfg.onrender.com/send-report', {
+          method: 'POST',
+          body: formData
+        });
+
+        const result = await response.json();
+        if (result.success) {
+          alert("Report sent successfully!");
+        } else {
+          alert("Failed to send report: " + result.message);
+        }
+      } catch (err) {
+        alert("Error connecting to server: " + err.message);
+      }
+
+      // Format datetime
+      let formattedDateTime = form.time.value;
+      if (formattedDateTime) {
+        const dateObj = new Date(form.time.value);
+        const options = {
+          year: "numeric",
+          month: "long",
+          day: "numeric",
+          hour: "numeric",
+          minute: "2-digit",
+          hour12: true
+        };
+        formattedDateTime = dateObj.toLocaleString(undefined, options);
+      }
+
+      // Display locally too
+      const reportItem = document.createElement('div');
+      reportItem.classList.add('report-item');
+      reportItem.innerHTML = `
+        <p><strong>Founder:</strong> ${form.founder.value}</p>
+        <p><strong>Place Searched:</strong> ${form.place.value}</p>
+        <p><strong>Time Lost:</strong> ${formattedDateTime}</p>
+        <p><strong>Description:</strong> ${form.description.value}</p>
+      `;
+
+      // Preview uploaded image if exists
+      if (form.image.files[0]) {
+        const img = document.createElement('img');
+        img.src = URL.createObjectURL(form.image.files[0]);
+        reportItem.appendChild(img);
+      }
+
+      reportList.appendChild(reportItem);
+      form.reset();
+    });
+  </script>
+</body>
+</html>
