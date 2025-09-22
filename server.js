@@ -10,7 +10,7 @@ const app = express();
 
 // 👉 Enable CORS for your GitHub Pages frontend
 app.use(cors({
-  origin: ["https://Prend0.io"], // replace with your GitHub Pages URL
+  origin: ["https://prend0.github.io/System-Lost-And-Found"],
   methods: ["GET", "POST"]
 }));
 
@@ -51,7 +51,7 @@ app.post("/send-report", upload.single("image"), async (req, res) => {
   let mailOptions = {
     from: process.env.GMAIL_USER,
     to: [
-      "macazo.386667@novaliches.sti.edu.ph", "acuna.385093@novaliches.sti.edu.ph", "melendez.387472@novaliches.sti.edu.ph", "sandiego.393481@novaliches.sti.edu.ph", "kamimura.405642@novaliches..385674@novaliches.sti.edu.ph", "go.387381@novaliches.sti.edu.ph", "nanquilada.388026@novaliches.sti.edu.ph", "paner.391196@novaliches.sti.edu.ph", "villegas.386021@novaliches.sti.edu.ph"
+      "macazo.386667@novaliches.sti.edu.ph", "acuna.385093@novaliches.sti.edu.ph", "melendez.387472@novaliches.sti.edu.ph", "sandiego.393481@novaliches.sti.edu.ph", "kamimura.405642@novaliches.sti.edu.ph", "go.387381@novaliches.sti.edu.ph", "nanquilada.388026@novaliches.sti.edu.ph", "paner.391196@novaliches.sti.edu.ph", "villegas.386021@novaliches.sti.edu.ph","ramos.386137@novaliches.sti.edu.ph"
       
       
     ],
